@@ -1,0 +1,92 @@
+use tutorial
+
+db.users.drop()
+
+db.users.insertOne({username:"smith"})
+
+db.users.insertOne({username:"jones"})
+
+db.users.find({})
+
+db.users.findOne()
+
+db.users.find({username:"jones"})
+
+db.users.find({
+    $or:[
+        {username: "jones"},
+        {username: "smith"}
+    ]
+})
+
+db.users.updateOne({username:"smith"},{$set:{country:"Canada"}})
+db.users.find({username:"smith"})
+
+db.users.updateOne({username:"smith"},{$unset:{country:"Canada"}})
+db.users.find({username:"smith"})
+
+show dbs
+
+show collections
+
+db.stats()
+db.users.stats()
+
+db.users.deleteOne({username:"smith"})
+db.users.find({})
+
+db.users.deleteMany({}) // 모든 문서 삭제
+db.users.find({})
+
+db.users.drop() // 컬렉션 삭제
+
+
+// 쿼리 작성하기
+
+use test
+
+db.product.drop()
+
+for (let i = 0; i<20000; i++) {
+    db.product.insertOne({num: i, name: '스마트폰 ' + i});
+}
+
+db.product.find({})
+
+db.product.countDocuments()
+
+db.product.find().sort({'num':-1})
+
+db.product.find().sort({'num':-1}).limit(10)
+
+// 한 페이지당 10건씩 출력
+// 6페이지에 해당하는 문서 출력
+page_number = 6  // 현재 페이지 번호
+page_size = 10   // 페이지당 항목 수
+
+db.product.find()
+    .sort({'num': -1})
+    .skip((page_number - 1) * page_size)
+    .limit(page_size)
+
+db.product.find({
+    $or: [
+        {num:{$lt:15}},
+        {num:{$gt:19995}}
+    ]
+})
+
+db.product.find({
+    $or: [
+        {num: 10},
+        {num: 100},
+        {num: 1000}
+    ]
+})
+
+// _id 빼고 name만 출력하기
+db.product.find({
+    num: {$lt:5}
+},{
+    _id: 0, name: 1
+})
